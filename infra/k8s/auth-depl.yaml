@@ -26,7 +26,7 @@ spec:
       containers:
         # a Pod can hold list of containers
         - name: auth-pod
-          image: fadygamil/auth
+          image: fadygamil/auth:latest
 ---
 apiVersion: v1
 kind: Service

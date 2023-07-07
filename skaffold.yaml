@@ -1,0 +1,21 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    # whenever we build the image we don't want to push it to the DockerHub
+    push: false
+  artifacts:
+    - image: fadygamil/auth
+      # the folder that contains all the code for this image is
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      # how to handle any changes in the files inside specified context
+      sync:
+        manual:
+          - src: "src/**/*ts" # where to watch the changes
+            dest: . # takes the vchanges and put them in the . path inside the container
