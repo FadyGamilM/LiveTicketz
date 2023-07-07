@@ -1,0 +1,44 @@
+# Hey k8s, look for the apps/v1 bag of objects this time.
+apiVersion: apps/v1
+# the object I will create is Deployment
+kind: Deployment
+# the metadata (config) of this Deployment is
+metadata:
+  # tha name of my deployment object in the k8s cluster
+  name: auth-depl
+# the spec customizes how the deployment object will behave
+spec:
+  # how many Pods i want to create from the following Pod's template
+  replicas: 1
+  # the selector and the template are working together to tell the
+  # deployment which Pod it should manage for us
+  selector:
+    matchLabels:
+      app: auth-pod
+  template:
+    metadata:
+      labels:
+        # the following is not the name of the Pod that if you execute
+        # kubectl get pods you will find, this is the just the way to
+        # specify to k8s how to find the Pod that I want it to be managed
+        app: auth-pod
+    spec:
+      containers:
+        # a Pod can hold list of containers
+        - name: auth-pod
+          image: fadygamil/auth
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-srv
+spec:
+  selector:
+    app: auth-pod
+  type: ClusterIP
+  # ports to expose on this pod
+  ports:
+    - name: auth-pod
+      protocol: TCP
+      port: 5000
+      targetPort: 3000
