@@ -1,13 +1,20 @@
 import { log } from "console";
 import express, { Request, Response, Express } from "express";
+import { currentUserRouter } from "./routes/current-user";
+import { loginRouter } from "./routes/login";
+import { logoutRouter } from "./routes/logout";
+import { signupRouter } from "./routes/signup";
 
 const app: Express = express();
 
-app.use(express());
+app.use(express.json());
 
-app.get("/api/users/current", (req: Request, res: Response) => {
-  // res.json({ user: "Fady Gamil" });
-  res.send("working");
+app.use("/api/users/", loginRouter);
+app.use("/api/users/", logoutRouter);
+app.use("/api/users/", signupRouter);
+app.use("/api/users/", currentUserRouter);
+app.use("/api/users", (req, res) => {
+  res.send("works");
 });
 
 app.listen(5000, () => {
