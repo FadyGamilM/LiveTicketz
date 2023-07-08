@@ -1,5 +1,5 @@
 import { log } from "console";
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { body, validationResult, Result } from "express-validator";
 const loginRouter: Router = Router();
 
@@ -15,19 +15,18 @@ loginRouter.post(
         "Password must be provided, valid, and between 8 to 20 character"
       ),
   ],
-  (req: Request, res: Response) => {
+  (req: Request, res: Response, next: NextFunction) => {
     // extract info from request body
     let { email, password } = req.body;
 
     // check if there are any validation errors
     let validationErrors: Result = validationResult(req);
-    log(validationErrors);
+
     if (!validationErrors.isEmpty())
-      return res.status(400).send(validationErrors.array());
+      throw new Error("Invalid email or password");
 
     // chekc if the type of email is not a string
-    if (typeof email !== "string")
-      return res.status(400).send("please provide a valid email");
+    if (typeof email !== "string") throw new Error("Invalid email");
   }
 );
 
