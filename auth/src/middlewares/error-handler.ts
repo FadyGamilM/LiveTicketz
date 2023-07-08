@@ -14,25 +14,11 @@ const errorHandler = (
   // log("Error handler has catched this error => ", err);
 
   if (err instanceof RequestValidationError) {
-    let formattedErrors = err.errors.map((error: ValidationError) => {
-      if (error.type === "field") {
-        return {
-          message: error.msg,
-          field: error.path,
-        };
-      }
-    });
-    return res.status(400).send(formattedErrors);
+    return res.status(err.statusCode).send({ errors: err.SerializeErrors() });
   }
 
   if (err instanceof DatabaseConnectionError) {
-    let formattedErrors = {
-      errors: [
-        {
-          message: err.error,
-        },
-      ],
-    };
+    return res.status(err.statusCode).send({ errors: err.SerializeErrors() });
   }
   return res.status(400).send({
     msg: err.message,
