@@ -1,6 +1,7 @@
 import { log } from "console";
 import { Router, Request, Response, NextFunction } from "express";
 import { body, validationResult, Result } from "express-validator";
+import { RequestValidationError } from "../errors/request-validation-error";
 const loginRouter: Router = Router();
 
 loginRouter.post(
@@ -22,8 +23,9 @@ loginRouter.post(
     // check if there are any validation errors
     let validationErrors: Result = validationResult(req);
 
-    if (!validationErrors.isEmpty())
-      throw new Error("Invalid email or password");
+    if (!validationErrors.isEmpty()) {
+      throw new RequestValidationError(validationErrors.array());
+    }
 
     // chekc if the type of email is not a string
     if (typeof email !== "string") throw new Error("Invalid email");
