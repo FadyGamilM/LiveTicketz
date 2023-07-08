@@ -2,7 +2,7 @@ import { log } from "console";
 import { Request, Response, NextFunction } from "express";
 import { RequestValidationError } from "../errors/request-validation-error";
 import { DatabaseConnectionError } from "../errors/database-connection-error";
-import { AppError } from "../errors/types/app-error";
+import { AppError } from "../errors/app-error";
 import { ValidationError } from "express-validator";
 
 const errorHandler = (
@@ -13,13 +13,10 @@ const errorHandler = (
 ) => {
   // log("Error handler has catched this error => ", err);
 
-  if (err instanceof RequestValidationError) {
+  if (err instanceof AppError) {
     return res.status(err.statusCode).send({ errors: err.SerializeErrors() });
   }
 
-  if (err instanceof DatabaseConnectionError) {
-    return res.status(err.statusCode).send({ errors: err.SerializeErrors() });
-  }
   return res.status(400).send({
     msg: err.message,
     error: err,
