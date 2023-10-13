@@ -2,8 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-service
+  name: ingress-srv
   annotations:
+    # The nginx controller will scan all different config files in my cluter to find the one which has this annotations to udnerstand that the routing rules are here 
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
@@ -11,10 +12,10 @@ spec:
     - host: liveticketz.dev
       http:
         paths:
-          - path: /api/users/?(.*)
+          - path: /auth/?(.*)
             pathType: ImplementationSpecific
             backend:
               service:
                 name: auth-srv
                 port:
-                  number: 5000 
+                  number: 3000
