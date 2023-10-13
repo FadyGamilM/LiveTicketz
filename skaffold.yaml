@@ -11,11 +11,11 @@ build:
   artifacts:
     - image: fadygamil/auth
       # the folder that contains all the code for this image is
-      context: auth
+      context: auth-microservice
       docker:
         dockerfile: Dockerfile
       # how to handle any changes in the files inside specified context
       sync:
         manual:
-          - src: "src/**/*ts" # where to watch the changes
+          - src: "*.go" # where to watch the changes
             dest: . # takes the vchanges and put them in the . path inside the container

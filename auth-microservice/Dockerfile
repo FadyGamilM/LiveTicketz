@@ -3,10 +3,16 @@ FROM golang:1.21.1-alpine3.18 AS builder
 
 WORKDIR /app
 
+# Copy go mod and sum files
 COPY go.mod go.sum ./
 
-RUN go get ./...
+# Download all dependencies.
+# If the go.mod and the go.sum files are not changed,
+# then Docker's layer caching will ensure that
+# go mod download is not called every time we build the Docker image.
+RUN go mod download
 
+# Copy the rest of the code
 COPY . .
 
 RUN go build -o auth ./cmd/main.go

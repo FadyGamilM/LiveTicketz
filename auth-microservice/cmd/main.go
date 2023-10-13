@@ -12,6 +12,6 @@ func main() {
 	_ = handlers.New(&handlers.AuthHandlerConfig{R: router})
 
 	server := rest.CreateServer(router)
-	rest.InitServer(server)
 	log.Println("server is up and running on port : ", server.Addr)
+	rest.InitServer(server)
 }
